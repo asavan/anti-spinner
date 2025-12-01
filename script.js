@@ -119,11 +119,11 @@ function createPermissionButton() {
 
 // Функция для добавления обработчиков событий ориентации
 function addOrientationListeners() {
-    if ('ondeviceorientationabsolute' in window) {
-        window.addEventListener('deviceorientationabsolute', handleOrientationAbsolute);
-    } else {
-        window.addEventListener('deviceorientation', handleOrientation);
-    }
+    window.addEventListener('deviceorientation', handleOrientation);
+    // if ('ondeviceorientationabsolute' in window) {
+    //     window.addEventListener('deviceorientationabsolute', handleOrientationAbsolute);
+    // } else {
+    // }
 }
 
 // Функция для отображения сообщения о неподдерживаемом браузере
