@@ -145,7 +145,12 @@ function showUnsupportedMessage() {
     document.body.appendChild(message);
 }
 
-checkOrientationSupport();
+square.addEventListener("click", () => {
+    if (!permissionGranted) {
+        checkOrientationSupport();
+    }
+    permissionGranted = true;
+});
 
 // Обработчик изменения размера окна
 window.addEventListener('resize', updateSquareOrientation);
