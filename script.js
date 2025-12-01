@@ -14,6 +14,20 @@ function updateSquareOrientation() {
     // Компенсируем поворот вокруг оси Z (альфа), чтобы квадрат оставался горизонтальным
     // Используем 3D трансформации для более плавного эффекта
     square.style.transform = `rotateZ(${-alpha}deg)`;
+
+    // Обновляем отладочную информацию
+    updateDebugInfo();
+}
+
+// Функция для обновления отладочной информации
+function updateDebugInfo() {
+    const alphaElement = document.getElementById('alpha-value');
+    const betaElement = document.getElementById('beta-value');
+    const gammaElement = document.getElementById('gamma-value');
+
+    if (alphaElement) alphaElement.textContent = alpha.toFixed(2);
+    if (betaElement) betaElement.textContent = beta.toFixed(2);
+    if (gammaElement) gammaElement.textContent = gamma.toFixed(2);
 }
 
 // Обработчик события deviceorientation
