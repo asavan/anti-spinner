@@ -1,0 +1,1 @@
+{"name": "Anti-Spinner", "short_name": "Anti-Spinner", "description": "Демонстрация компенсации вращения элемента при повороте устройства", "start_url": "./index.html", "display": "standalone", "background_color": "#f0f0f0", "theme_color": "#0066ff"}
