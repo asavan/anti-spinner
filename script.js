@@ -11,8 +11,6 @@ let permissionGranted = false;
 
 // Функция для применения трансформации к квадрату
 function updateSquareOrientation() {
-    if (!permissionGranted) return;
-    
     // Компенсируем поворот вокруг оси Z (альфа), чтобы квадрат оставался горизонтальным
     // Используем 3D трансформации для более плавного эффекта
     square.style.transform = `rotateZ(${-alpha}deg)`;
@@ -147,24 +145,7 @@ function showUnsupportedMessage() {
     document.body.appendChild(message);
 }
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    checkOrientationSupport();
-});
-
-// Обработчик события devicemotion (резервный вариант)
-function handleMotion(event) {
-    // Получаем данные об ускорении
-    const acceleration = event.acceleration;
-    const accelerationIncludingGravity = event.accelerationIncludingGravity;
-    const rotationRate = event.rotationRate;
-    
-    // Можно использовать эти данные для более точной коррекции,
-    // но для простого случая достаточно deviceorientation
-}
-
-// Добавляем обработчик devicemotion как резерв
-window.addEventListener('devicemotion', handleMotion);
+checkOrientationSupport();
 
 // Обработчик изменения размера окна
 window.addEventListener('resize', updateSquareOrientation);
