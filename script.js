@@ -5,9 +5,47 @@ const square = document.getElementById('square');
 let alpha = 0; // Поворот вокруг оси Z (компас)
 let beta = 0;  // Поворот вокруг оси X (наклон вперед/назад)
 let gamma = 0; // Поворот вокруг оси Y (наклон влево/вправо)
+let counter = 0;
 
 // Флаг для отслеживания состояния разрешения
 let permissionGranted = false;
+
+// Переменные для плавной анимации
+let targetAlpha = 0; // Целевое значение alpha
+let currentAlpha = 0; // Текущее значение alpha для анимации
+let animationId = null; // ID анимации для requestAnimationFrame
+
+// Функция для плавной интерполяции между углами
+function interpolateAngle(current, target, factor) {
+    // Нормализуем разницу между углами
+    let diff = target - current;
+
+    // Приводим разницу к диапазону [-180, 180]
+    while (diff > 180) diff -= 360;
+    while (diff < -180) diff += 360;
+
+    // Интерполируем с заданным коэффициентом
+    return current + diff * factor;
+}
+
+// Функция анимации
+function animate() {
+    if (!permissionGranted) return;
+
+    // Плавно интерполируем текущее значение к целевому
+    // Используем меньший коэффициент для более плавного движения
+    currentAlpha = interpolateAngle(currentAlpha, targetAlpha, 0.1);
+
+    // Применяем обратный поворот к квадрату
+    square.style.transform = `rotateZ(${-currentAlpha}deg)`;
+
+    // Обновляем отладочную информацию
+    updateDebugInfo();
+
+    // Продолжаем анимацию
+    animationId = requestAnimationFrame(animate);
+}
+
 
 // Функция для применения трансформации к квадрату
 function updateSquareOrientation() {
@@ -24,16 +62,20 @@ function updateDebugInfo() {
     const alphaElement = document.getElementById('alpha-value');
     const betaElement = document.getElementById('beta-value');
     const gammaElement = document.getElementById('gamma-value');
+    const counterElement = document.getElementById('counter-value');
 
     if (alphaElement) alphaElement.textContent = alpha.toFixed(2);
     if (betaElement) betaElement.textContent = beta.toFixed(2);
     if (gammaElement) gammaElement.textContent = gamma.toFixed(2);
+    if (counterElement) counterElement.textContent = counter;
 }
 
 // Обработчик события deviceorientation
 function handleOrientation(event) {
     // Проверяем, что событие содержит корректные данные
+    ++counter;
     if (event.alpha === null && event.beta === null && event.gamma === null) {
+        counter -= 1000;
         return;
     }
     
@@ -43,7 +85,14 @@ function handleOrientation(event) {
     gamma = event.gamma !== null ? event.gamma : 0; // left-to-right tilt
     
     // Применяем обратный поворот к квадрату
-    updateSquareOrientation();
+    // Устанавливаем целевое значение для анимации
+    targetAlpha = alpha;
+
+    // Запускаем анимацию, если она еще не запущена
+    if (!animationId) {
+        animationId = requestAnimationFrame(animate);
+    }
+    // updateSquareOrientation();
 }
 
 // Обработчик события deviceorientationabsolute (более точный, но поддерживается не всеми браузерами)
