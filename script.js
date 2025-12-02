@@ -30,14 +30,12 @@ function interpolateAngle(current, target, factor) {
 
 // Функция анимации
 function animate() {
-    if (!permissionGranted) return;
-
     // Плавно интерполируем текущее значение к целевому
     // Используем меньший коэффициент для более плавного движения
-    currentAlpha = interpolateAngle(currentAlpha, targetAlpha, 0.1);
+    currentAlpha = interpolateAngle(currentAlpha, targetAlpha, 0.2);
 
     // Применяем обратный поворот к квадрату
-    square.style.transform = `rotateZ(${-currentAlpha}deg)`;
+    square.style.transform = `rotateZ(${currentAlpha}deg)`;
 
     // Обновляем отладочную информацию
     updateDebugInfo();
@@ -119,6 +117,7 @@ function checkOrientationSupport() {
             createPermissionButton();
         } else {
             // Добавляем обработчики событий напрямую
+            permissionGranted = true;
             addOrientationListeners();
         }
     } else {
@@ -162,11 +161,9 @@ function createPermissionButton() {
         DeviceOrientationEvent.requestPermission()
             .then(permissionState => {
                 if (permissionState === 'granted') {
-                    permissionGranted = true;
                     // Убираем кнопку после получения разрешения
-                    if (this.parentNode) {
-                        this.parentNode.removeChild(this);
-                    }
+                    button.remove();
+                    permissionGranted = true;
                     // Добавляем обработчики событий
                     addOrientationListeners();
                 }
